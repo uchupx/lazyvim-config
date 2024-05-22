@@ -34,14 +34,14 @@ for mode, modeval in pairs(D) do
   end
 end
 
-local Util = require("lazyvim.util")
-local lazyterm = function()
-  Util.terminal(nil, { cwd = Util.root() })
-end
+-- local Util = require("lazyvim.util")
+-- local lazyterm = function()
+--   Util.terminal(nil, { cwd = Util.root() })
+-- end
 local M = {
   -- normal mode
   n = {
-    ["<leader>/"] = { "gcc", "Toggle Comment" },
+    ["<leader>/"] = { "<Plug>(comment_toggle_linewise_current)", "Toggle Comment" },
     ["<leader>h"] = { ":ToggleTerm direction=horizontal<cr>", "Open Terminal horizontal" },
     ["<leader>fs"] = {
       function()
@@ -63,10 +63,10 @@ local M = {
         require("cmp").abort()
       end,
       "Abort Completion",
-    }
+    },
   },
   v = {
-    ["<leader>/"] = { "gc", "Toggle Comment" },
+    ["<leader>/"] = { "<Plug>(comment_toggle_linewise_visual)", "Toggle Comment" },
   }
 }
 -- visual mode
@@ -76,6 +76,9 @@ for mode, modeval in pairs(M) do
     local keymap = key
     local keymap_func = val[1]
     local keymap_desc = val[2]
-    vim.keymap.set(mode, keymap, keymap_func, { noremap = true, silent = true, desc = keymap_desc })
+    print(val[1])
+    pcall(function()
+      vim.keymap.set(mode, keymap, val[1], { noremap = true, silent = true, desc = keymap_desc })
+    end)
   end
 end
