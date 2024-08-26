@@ -1,4 +1,5 @@
-local servers = { "intelephense", "gopls", "tsserver", "docker_compose_language_service" }
+local servers = { "intelephense", "gopls", "tsserver", "docker_compose_language_service", "twiggy-language-server",
+  "tailwindcss-language-server", "css-lsp" }
 
 for _, value in pairs(servers) do
   require("lspconfig")[value].setup({

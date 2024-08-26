@@ -33,6 +33,9 @@ for mode, modeval in pairs(D) do
     end)
   end
 end
+function run(cmd, raw)
+  return s
+end
 
 -- local Util = require("lazyvim.util")
 -- local lazyterm = function()
@@ -43,17 +46,42 @@ local M = {
   n = {
     ["<leader>/"] = { "<Plug>(comment_toggle_linewise_current)", "Toggle Comment" },
     ["<leader>h"] = { ":ToggleTerm direction=horizontal<cr>", "Open Terminal horizontal" },
+    ["<leader>co"] = { ":CopilotChatOpen<cr>", "Open Copilot Chat" },
+    ["<leader>tq"] = { ":bd<cr>", "Close current buffer" },
     ["<leader>fs"] = {
       function()
         require("telescope.builtin").live_grep()
       end,
       "Find in files",
     },
-    ["<leader>up"] = {
+    ["<leader>us"] = {
       function()
         local path = vim.fn.expand('%:.')
-        os.execute("~/script/script/update_file.sh " .. path .. " .git/.env")
-      end, "Upload batch by git status, FTP", },
+        --local exit = os.execute("~/script/script/single_upload.sh " .. path .. " .git/.env")
+        -- local value = exit / 256
+        local f = assert(io.popen("~/script/script/single_upload.sh " .. path .. " .git/.env", 'r'))
+        local s = assert(f:read('*a'))
+        f:close()
+        s = string.gsub(s, '^%s+', '')
+        s = string.gsub(s, '%s+$', '')
+        s = string.gsub(s, '[\n\r]+', ' ')
+        vim.notify(s, "info")
+      end, "Upload current buffer to ftp, FTP", },
+    ["<leader>ud"] = {
+      function()
+        local path = vim.fn.expand('%:.')
+        --local exit = os.execute("~/script/script/single_upload.sh " .. path .. " .git/.env")
+        -- local value = exit / 256
+        local f = assert(io.popen("~/script/script/sync_file.sh " .. path .. " .git/.env", 'r'))
+        local s = assert(f:read('*a'))
+        f:close()
+        s = string.gsub(s, '^%s+', '')
+        s = string.gsub(s, '%s+$', '')
+        s = string.gsub(s, '[\n\r]+', ' ')
+        vim.notify(s, "info")
+        vim.cmd("bdelete")
+        vim.cmd("edit " .. path)
+      end, "Sync current buffer from ftp, FTP", },
     ["<M-esc>"] = { ":Neotree<cr>", "Open nvim tree" }
   },
   i = {
