@@ -59,7 +59,7 @@ local M = {
         local path = vim.fn.expand('%:.')
         --local exit = os.execute("~/script/script/single_upload.sh " .. path .. " .git/.env")
         -- local value = exit / 256
-        local f = assert(io.popen("~/script/script/single_upload.sh " .. path .. " .git/.env", 'r'))
+        local f = assert(io.popen("$SCRIPT/single_upload.sh " .. path .. " .git/.env", 'r'))
         local s = assert(f:read('*a'))
         f:close()
         s = string.gsub(s, '^%s+', '')
@@ -72,7 +72,7 @@ local M = {
         local path = vim.fn.expand('%:.')
         --local exit = os.execute("~/script/script/single_upload.sh " .. path .. " .git/.env")
         -- local value = exit / 256
-        local f = assert(io.popen("~/script/script/sync_file.sh " .. path .. " .git/.env", 'r'))
+        local f = assert(io.popen("$SCRIPT/sync_file.sh " .. path .. " .git/.env", 'r'))
         local s = assert(f:read('*a'))
         f:close()
         s = string.gsub(s, '^%s+', '')
