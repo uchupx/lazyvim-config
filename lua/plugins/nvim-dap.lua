@@ -1,18 +1,18 @@
 return {
   {
-    'mfussenegger/nvim-dap',
+    "mfussenegger/nvim-dap",
     config = function()
-      local dap = require('dap')
+      local dap = require("dap")
 
       dap.adapters.delve = {
-        type = 'server',
-        port = '${port}',
+        type = "server",
+        port = "${port}",
         executable = {
-          command = 'dlv',
-          args = { 'dap', '-l', '127.0.0.1:${port}' },
+          command = "dlv",
+          args = { "dap", "-l", "127.0.0.1:${port}" },
           -- add this if on windows, otherwise server won't open successfully
           -- detached = false
-        }
+        },
       }
 
       -- https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv_dap.md
@@ -21,14 +21,21 @@ return {
           type = "delve",
           name = "Debug",
           request = "launch",
-          program = "${file}"
+          program = "${file}",
         },
         {
           type = "delve",
           name = "Debug test", -- configuration for debugging test files
           request = "launch",
           mode = "test",
-          program = "${file}"
+          program = "${file}",
+        },
+        {
+          type = "delve",
+          name = "Debug test", -- configuration for debugging test files
+          request = "launch",
+          mode = "test",
+          program = "${file}",
         },
         -- works with go.mod packages and sub packages
         {
@@ -36,28 +43,35 @@ return {
           name = "Debug test (go.mod)",
           request = "launch",
           mode = "test",
-          program = "./${relativeFileDirname}"
-        }
+          program = "./${relativeFileDirname}",
+        },
+        {
+          type = "delve",
+          name = "Run main.go",
+          request = "launch",
+          mode = "test",
+          program = "${workspaceFolder}/main.go", -- path to main.go
+        },
       }
-    end
+    end,
   },
   {
-    'rcarriga/nvim-dap-ui',
-    requires = { 'mfussenegger/nvim-dap' },
+    "rcarriga/nvim-dap-ui",
+    requires = { "mfussenegger/nvim-dap" },
     config = function()
-      local dap, dapui = require('dap'), require('dapui')
+      local dap, dapui = require("dap"), require("dapui")
 
       dapui.setup()
 
-      dap.listeners.after.event_initialized['dapui_config'] = function()
+      dap.listeners.after.event_initialized["dapui_config"] = function()
         dapui.open()
       end
-      dap.listeners.before.event_terminated['dapui_config'] = function()
+      dap.listeners.before.event_terminated["dapui_config"] = function()
         dapui.close()
       end
-      dap.listeners.before.event_exited['dapui_config'] = function()
+      dap.listeners.before.event_exited["dapui_config"] = function()
         dapui.close()
       end
-    end
-  }
+    end,
+  },
 }

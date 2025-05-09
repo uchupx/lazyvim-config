@@ -1,6 +1,7 @@
 return {
   {
     "hrsh7th/nvim-cmp",
+    enable = false,
     dependencies = {
       {
         "zbirenbaum/copilot-cmp",
@@ -23,6 +24,10 @@ return {
         { name = "nvim_lua", group_index = 2 },
         { name = "path",     group_index = 2 },
       }
+      opts.performance = {
+        debounce = 200, -- default is 60ms
+        throttle = 200, -- default is 60ms
+      }
 
       opts.mapping = cmp.mapping.preset.insert({
         -- ["<C-Space>"] = cmp.mapping.complete(),
@@ -40,7 +45,7 @@ return {
         --   c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
         -- }),
         -- ["<S-Tab>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
-        ['<C-Space>'] = cmp.mapping(function(fallback)
+        ['<Tab>'] = cmp.mapping(function(fallback)
           -- This little snippet will confirm with tab, and if no entry is selected, will confirm the first item
           if cmp.visible() then
             local entry = cmp.get_selected_entry()

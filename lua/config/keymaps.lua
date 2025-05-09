@@ -44,15 +44,34 @@ end
 local M = {
   -- normal mode
   n = {
-    ["<leader>/"] = { "<Plug>(comment_toggle_linewise_current)", "Toggle Comment" },
+    ["C-/"] = { "<Plug>(comment_toggle_linewise_current)", "Toggle Comment" },
     ["<leader>h"] = { ":ToggleTerm direction=horizontal<cr>", "Open Terminal horizontal" },
-    ["<leader>co"] = { ":CopilotChatOpen<cr>", "Open Copilot Chat" },
-    ["<leader>tq"] = { ":bd<cr>", "Close current buffer" },
+    ["<leader>xo"] = { ":CopilotChatOpen<cr>", "Open Copilot Chat" },
+    ["<leader>xm"] = { ":CopilotChatModels<cr>", "Change CopilotChat model" },
+    ["<leader>tq"] = { ":Bwipeout<cr>", "Close current buffer" },
+    ["<leader>fw"] = { ":lua require('wrapping').soft_wrap_mode()<CR>", "Toggle warp mode" },
+    ["<leader>tb"] = { function()
+      require('gitsigns').toggle_current_line_blame()
+    end, "Toggle current line blame (gitsigns)" },
     ["<leader>fs"] = {
       function()
-        require("telescope.builtin").live_grep()
+        require('fzf-lua').live_grep()
+        -- require("telescope.builtin").live_grep()
       end,
       "Find in files",
+    },
+    ["<leader>fd"] = {
+      function()
+        vim.ui.input({ prompt = "Search in directory: ", default = vim.fn.getcwd() }, function(input)
+          if input then
+            require('fzf-lua').live_grep({
+              cwd = input,
+              prompt = "Grep in " .. input .. "> ",
+            })
+          end
+        end)
+      end,
+      "Find in specific directory",
     },
     ["<leader>us"] = {
       function()
@@ -95,6 +114,9 @@ local M = {
   },
   v = {
     ["<leader>/"] = { "<Plug>(comment_toggle_linewise_visual)", "Toggle Comment" },
+    ["<leader>rn"] = { function()
+      return ":IncRename " .. vim.fn.expand("<cword>")
+    end, "Toggle Comment" },
   }
 }
 -- visual mode
@@ -106,7 +128,7 @@ for mode, modeval in pairs(M) do
     local keymap_desc = val[2]
     print(val[1])
     pcall(function()
-      vim.keymap.set(mode, keymap, val[1], { noremap = true, silent = true, desc = keymap_desc })
+      vim.keymap.set(mode, keymap, keymap_func, { noremap = true, silent = true, desc = keymap_desc })
     end)
   end
 end
